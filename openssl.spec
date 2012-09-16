@@ -21,7 +21,7 @@
 Summary: A general purpose cryptography library with TLS implementation
 Name: openssl
 Version: 1.0.0
-Release: 10%{?dist}
+Release: 4%{?dist}
 # We remove certain patented algorithms from the openssl source tarball
 # with the hobble-openssl script which is included below.
 Source: openssl-%{version}-usa.tar.bz2
@@ -61,20 +61,11 @@ Patch50: openssl-1.0.0-beta4-dtls1-abi.patch
 Patch51: openssl-1.0.0-version.patch
 Patch52: openssl-1.0.0-beta4-aesni.patch
 Patch53: openssl-1.0.0-name-hash.patch
-Patch54: openssl-1.0.0c-speed-fips.patch
-Patch55: openssl-1.0.0c-apps-ipv6listen.patch
-Patch56: openssl-1.0.0c-rsa-x931.patch
-Patch57: openssl-1.0.0-fips186-3.patch
-Patch58: openssl-1.0.0c-fips-md5-allow.patch
-Patch59: openssl-1.0.0c-pkcs12-fips-default.patch
 # Backported fixes including security fixes
 Patch60: openssl-1.0.0-dtls1-backports.patch
 Patch61: openssl-1.0.0-init-sha256.patch
 Patch62: openssl-1.0.0-cve-2010-0742.patch
 Patch63: openssl-1.0.0-cve-2010-1633.patch
-Patch64: openssl-1.0.0-cve-2010-3864.patch
-Patch65: openssl-1.0.0-cve-2010-4180.patch
-Patch66: openssl-1.0.0-cve-2011-0014.patch
 
 License: OpenSSL
 Group: System Environment/Libraries
@@ -155,20 +146,11 @@ from other formats to the formats used by the OpenSSL toolkit.
 %patch51 -p1 -b .version
 %patch52 -p1 -b .aesni
 %patch53 -p1 -b .name-hash
-%patch54 -p1 -b .spfips
-%patch55 -p1 -b .ipv6listen
-%patch56 -p1 -b .x931
-%patch57 -p1 -b .fips186-3
-%patch58 -p1 -b .md5-allow
-%patch59 -p1 -b .fips-default
 
 %patch60 -p1 -b .dtls1
 %patch61 -p1 -b .sha256
 %patch62 -p1 -b .originfo
 %patch63 -p1 -b .recover
-%patch64 -p1 -b .extrace
-%patch65 -p1 -b .disable-nsbug
-%patch66 -p0 -b .ocsp-stapling
 
 # Modify the various perl scripts to reference perl in the right location.
 perl util/perlpath.pl `dirname %{__perl}`
@@ -420,32 +402,6 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/fipscanister.*
 %postun -p /sbin/ldconfig
 
 %changelog
-* Thu Feb 10 2011 Tomas Mraz <tmraz@redhat.com> 1.0.0-10
-- fix OCSP stapling vulnerability - CVE-2011-0014 (#676063)
-- correct the README.FIPS document
-
-* Fri Feb  4 2011 Tomas Mraz <tmraz@redhat.com> 1.0.0-8
-- add -x931 parameter to openssl genrsa command to use the ANSI X9.31
-  key generation method
-- use FIPS-186-3 method for DSA parameter generation
-- add OPENSSL_FIPS_NON_APPROVED_MD5_ALLOW environment variable
-  to allow using MD5 when the system is in the maintenance state
-  even if the /proc fips flag is on
-- make openssl pkcs12 command work by default in the FIPS mode
-
-* Mon Jan 24 2011 Tomas Mraz <tmraz@redhat.com> 1.0.0-7
-- listen on ipv6 wildcard in s_server so we accept connections
-  from both ipv4 and ipv6 (#601612)
-- fix openssl speed command so it can be used in the FIPS mode
-  with FIPS allowed ciphers (#619762)
-
-* Tue Dec  7 2010 Tomas Mraz <tmraz@redhat.com> 1.0.0-6
-- disable code for SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG - CVE-2010-3864
-  (#649304)
-
-* Fri Nov  5 2010 Tomas Mraz <tmraz@redhat.com> 1.0.0-5
-- fix race in extension parsing code - CVE-2010-3864 (#649304)
-
 * Wed Jun 30 2010 Tomas Mraz <tmraz@redhat.com> 1.0.0-4
 - openssl man page fix (#609484)
 
